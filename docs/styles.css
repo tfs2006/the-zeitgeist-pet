@@ -21,6 +21,11 @@
     --success: #48bb78;
     --warning: #ecc94b;
     --danger: #f56565;
+    /* Safe area insets for notched phones */
+    --safe-area-top: env(safe-area-inset-top, 0px);
+    --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-area-left: env(safe-area-inset-left, 0px);
+    --safe-area-right: env(safe-area-inset-right, 0px);
 }
 
 /* Reset & Base */
@@ -30,13 +35,43 @@
     box-sizing: border-box;
 }
 
+html {
+    /* Prevent text size adjustment on orientation change */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* Smooth scrolling */
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: 'Space Mono', monospace;
     background: var(--bg-primary);
     color: var(--text-primary);
     min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
     overflow-x: hidden;
     line-height: 1.6;
+    /* Prevent pull-to-refresh on mobile */
+    overscroll-behavior-y: contain;
+    /* Better touch handling */
+    -webkit-tap-highlight-color: transparent;
+    /* Safe area padding for notched phones */
+    padding-top: var(--safe-area-top);
+    padding-bottom: var(--safe-area-bottom);
+    padding-left: var(--safe-area-left);
+    padding-right: var(--safe-area-right);
+}
+
+/* Ensure images and media don't overflow */
+img, video, iframe, svg {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Better focus styles for accessibility */
+:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
 }
 
 /* Background Container */
@@ -75,6 +110,9 @@ body {
     margin: 0 auto;
     padding: 20px;
     position: relative;
+    /* Prevent horizontal overflow on mobile */
+    width: 100%;
+    overflow-x: hidden;
 }
 
 /* Shake Animation for Earthquakes */
@@ -831,47 +869,560 @@ body {
     border-radius: 10px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* ============================================
+   RESPONSIVE DESIGN - Mobile First Approach
+   ============================================ */
+
+/* Extra Small Devices (phones, 320px - 479px) */
+@media (max-width: 479px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .header {
+        padding: 20px 0;
+    }
+    
     .title {
-        font-size: 2rem;
+        font-size: 1.5rem;
+        letter-spacing: 1px;
+    }
+    
+    .subtitle {
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+    }
+    
+    /* Disable glitch on small screens for performance */
+    .glitch::before,
+    .glitch::after {
+        display: none;
     }
     
     .entity-avatar img {
-        width: 200px;
-        height: 200px;
+        width: 150px;
+        height: 150px;
     }
     
     .entity-glow {
-        width: 250px;
-        height: 250px;
+        width: 180px;
+        height: 180px;
+    }
+    
+    .entity-name {
+        font-size: 1.3rem;
+    }
+    
+    .spirit-pokemon {
+        bottom: -10px;
+        right: -10px;
+    }
+    
+    .spirit-pokemon img {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .thought-bubble {
+        padding: 15px;
+        margin: 15px 10px;
+    }
+    
+    .thought-content {
+        font-size: 0.9rem;
+    }
+    
+    .vibe-bar {
+        height: 25px;
+        max-width: 100%;
+    }
+    
+    .vibe-score {
+        font-size: 1rem;
+    }
+    
+    .mood-text {
+        font-size: 1.1rem;
     }
     
     .interaction-section {
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
+        gap: 12px;
+        padding: 0 10px;
     }
     
     .btn {
         width: 100%;
-        max-width: 250px;
+        padding: 12px 20px;
+        font-size: 0.9rem;
         justify-content: center;
+    }
+    
+    .btn-icon {
+        font-size: 1.2rem;
     }
     
     .data-panels,
     .voice-section,
     .rec-grid {
         grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .panel, .voice-panel, .rec-card {
+        padding: 15px;
+    }
+    
+    .panel-title {
+        font-size: 0.85rem;
+    }
+    
+    .panel-content {
+        font-size: 0.8rem;
+    }
+    
+    .data-row {
+        flex-direction: column;
+        gap: 3px;
+        text-align: center;
+    }
+    
+    .voice-panel h3 {
+        font-size: 0.85rem;
+    }
+    
+    .voice-panel blockquote,
+    .voice-panel p {
+        font-size: 0.85rem;
+    }
+    
+    .section-title {
+        font-size: 1.2rem;
+    }
+    
+    .rec-icon {
+        font-size: 2rem;
+    }
+    
+    .rec-title {
+        font-size: 1rem;
+    }
+    
+    .footer {
+        padding: 30px 10px;
     }
     
     .footer-actions {
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
+        gap: 10px;
     }
     
     .footer-btn {
         width: 100%;
-        max-width: 250px;
+        padding: 10px 20px;
+        font-size: 0.8rem;
+    }
+    
+    .update-timer {
+        font-size: 0.8rem;
+    }
+    
+    .credits, .branding, .copyright {
+        font-size: 0.7rem;
+    }
+    
+    /* Modal adjustments */
+    .modal {
+        padding: 10px;
+    }
+    
+    .modal-content {
+        padding: 20px 15px;
+        max-height: 90vh;
+        border-radius: 15px;
+    }
+    
+    .modal-content h2 {
+        font-size: 1.1rem;
+        padding-right: 30px;
+    }
+    
+    .modal-close {
+        font-size: 1.5rem;
+        top: 10px;
+        right: 15px;
+    }
+    
+    #brain-scan-data {
+        font-size: 0.7rem;
+        padding: 10px;
+    }
+    
+    .mood-card {
+        padding: 20px;
+        min-width: auto;
+    }
+    
+    .mood-card-score {
+        font-size: 3rem;
+    }
+    
+    .mood-card-mood {
+        font-size: 1.2rem;
+    }
+    
+    .qr-image {
+        max-width: 180px;
+    }
+    
+    /* Particle system - fewer particles on mobile */
+    .api-particle {
+        font-size: 16px;
+    }
+    
+    .particle-tooltip {
+        max-width: 200px;
+        font-size: 10px;
+        padding: 8px 12px;
+    }
+    
+    .particle-tooltip h4 {
+        font-size: 12px;
+    }
+}
+
+/* Small Devices (large phones, 480px - 767px) */
+@media (min-width: 480px) and (max-width: 767px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .title {
+        font-size: 1.8rem;
+    }
+    
+    .subtitle {
+        font-size: 0.85rem;
+    }
+    
+    .entity-avatar img {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .entity-glow {
+        width: 220px;
+        height: 220px;
+    }
+    
+    .entity-name {
+        font-size: 1.5rem;
+    }
+    
+    .spirit-pokemon img {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .thought-bubble {
+        padding: 15px 20px;
+        margin: 15px;
+    }
+    
+    .thought-content {
+        font-size: 1rem;
+    }
+    
+    .interaction-section {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .btn {
+        flex: 1;
+        min-width: 140px;
+        max-width: 200px;
+        justify-content: center;
+    }
+    
+    .data-panels,
+    .voice-section {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .rec-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .data-row {
+        flex-direction: row;
+    }
+    
+    .footer-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .footer-btn {
+        flex: 1;
+        min-width: 140px;
+        max-width: 180px;
+    }
+}
+
+/* Medium Devices (tablets, 768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .container {
+        padding: 20px;
+    }
+    
+    .title {
+        font-size: 2.5rem;
+    }
+    
+    .entity-avatar img {
+        width: 220px;
+        height: 220px;
+    }
+    
+    .entity-glow {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .entity-name {
+        font-size: 1.7rem;
+    }
+    
+    .thought-bubble {
+        max-width: 450px;
+    }
+    
+    .interaction-section {
+        gap: 15px;
+    }
+    
+    .btn {
+        padding: 14px 28px;
+    }
+    
+    .data-panels,
+    .voice-section {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .rec-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .footer-actions {
+        gap: 12px;
+    }
+}
+
+/* Large Devices (desktops, 1024px+) */
+@media (min-width: 1024px) {
+    .container {
+        padding: 20px 40px;
+    }
+    
+    .title {
+        font-size: 3.5rem;
+    }
+    
+    .entity-avatar img {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .entity-glow {
+        width: 350px;
+        height: 350px;
+    }
+    
+    .entity-name {
+        font-size: 2rem;
+    }
+    
+    .data-panels {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .voice-section {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .rec-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Extra Large Devices (large desktops, 1440px+) */
+@media (min-width: 1440px) {
+    .container {
+        max-width: 1400px;
+    }
+    
+    .title {
+        font-size: 4rem;
+    }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .btn:hover::before {
+        display: none;
+    }
+    
+    .panel:hover,
+    .rec-card:hover {
+        transform: none;
+    }
+    
+    .btn:active {
+        transform: scale(0.95);
+    }
+    
+    .panel:active,
+    .rec-card:active {
+        transform: scale(0.98);
+    }
+    
+    /* Larger touch targets */
+    .btn {
+        min-height: 48px;
+    }
+    
+    .footer-btn {
+        min-height: 44px;
+    }
+    
+    .modal-close {
+        min-width: 44px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* Landscape Mode for Phones */
+@media (max-height: 500px) and (orientation: landscape) {
+    .header {
+        padding: 10px 0;
+    }
+    
+    .title {
+        font-size: 1.5rem;
+    }
+    
+    .subtitle {
+        display: none;
+    }
+    
+    .entity-avatar img {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .entity-glow {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .entity-name {
+        font-size: 1.2rem;
+        margin-top: 8px;
+    }
+    
+    .thought-bubble {
+        padding: 10px 15px;
+        margin: 10px;
+    }
+    
+    .vibe-meter {
+        margin-bottom: 15px;
+    }
+    
+    .interaction-section {
+        margin: 15px 0;
+    }
+    
+    .modal-content {
+        max-height: 95vh;
+        padding: 15px;
+    }
+}
+
+/* Reduced Motion for Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .glitch::before,
+    .glitch::after {
+        display: none;
+    }
+    
+    .entity-glow {
+        animation: none;
+        opacity: 0.5;
+    }
+    
+    .api-particle {
+        animation: none;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    :root {
+        --border-color: rgba(255, 255, 255, 0.5);
+        --text-secondary: #c0c0c0;
+    }
+    
+    .panel, .voice-panel, .rec-card {
+        border-width: 2px;
+    }
+}
+
+/* Dark Mode (default, but explicit) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-primary: #0a0a0f;
+        --bg-secondary: #12121a;
+    }
+}
+
+/* Print Styles */
+@media print {
+    #background-container,
+    #particle-container,
+    .interaction-section,
+    .footer-actions,
+    .spirit-pokemon,
+    .entity-glow {
+        display: none !important;
+    }
+    
+    body {
+        background: white;
+        color: black;
+    }
+    
+    .panel, .voice-panel, .rec-card {
+        background: white;
+        border: 1px solid #ccc;
+        break-inside: avoid;
     }
 }
 

@@ -10,6 +10,8 @@ class APIParticleSystem {
         this.container = null;
         this.state = null;
         this.animationFrame = null;
+        this.isMobile = window.innerWidth <= 768 || 'ontouchstart' in window;
+        this.isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         
         // Define the 20 API data streams with their visual personalities
         this.apiDefinitions = [
@@ -46,6 +48,12 @@ class APIParticleSystem {
     }
 
     init() {
+        // Skip particles entirely if reduced motion is preferred
+        if (this.isReducedMotion) {
+            console.log('Reduced motion preferred - skipping particle system');
+            return;
+        }
+        
         // Create container
         this.container = document.createElement('div');
         this.container.id = 'api-particles';
@@ -58,11 +66,40 @@ class APIParticleSystem {
         // Add styles
         this.addStyles();
         
-        // Create particles
+        // Create particles (fewer on mobile)
         this.createParticles();
         
         // Start animation
         this.animate();
+        
+        // Handle window resize
+        window.addEventListener('resize', this.handleResize.bind(this));
+    }
+    
+    handleResize() {
+        const wasMobile = this.isMobile;
+        this.isMobile = window.innerWidth <= 768 || 'ontouchstart' in window;
+        
+        // If device type changed, recreate particles with appropriate count
+        if (wasMobile !== this.isMobile) {
+            this.recreateParticles();
+        }
+        
+        // Keep particles in bounds after resize
+        this.particles.forEach(p => {
+            p.x = Math.min(p.x, window.innerWidth - 60);
+            p.y = Math.min(p.y, window.innerHeight - 60);
+        });
+    }
+    
+    recreateParticles() {
+        const layer = this.container.querySelector('.particle-layer');
+        layer.innerHTML = '';
+        this.particles = [];
+        this.createParticles();
+        if (this.state) {
+            this.updateParticleStates(this.state);
+        }
     }
 
     addStyles() {
@@ -98,6 +135,8 @@ class APIParticleSystem {
                 text-shadow: 0 0 10px currentColor;
                 backdrop-filter: blur(5px);
                 border: 2px solid rgba(255,255,255,0.2);
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
             }
             
             .api-particle:hover {
@@ -219,6 +258,47 @@ class APIParticleSystem {
                 opacity: 0.3;
                 transition: opacity 0.5s;
             }
+            
+            /* Mobile-specific particle styles */
+            @media (max-width: 768px) {
+                .api-particle {
+                    font-size: 16px;
+                }
+                
+                .particle-tooltip {
+                    max-width: 250px;
+                    padding: 12px 15px;
+                    font-size: 11px;
+                    left: 50% !important;
+                    transform: translateX(-50%) translateY(10px);
+                    bottom: 80px;
+                    top: auto !important;
+                }
+                
+                .particle-tooltip.visible {
+                    transform: translateX(-50%) translateY(0);
+                }
+                
+                .particle-tooltip .tooltip-icon {
+                    font-size: 20px;
+                }
+                
+                .particle-tooltip .tooltip-name {
+                    font-size: 13px;
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .api-particle {
+                    font-size: 14px;
+                }
+                
+                .particle-tooltip {
+                    max-width: 90vw;
+                    padding: 10px 12px;
+                    font-size: 10px;
+                }
+            }
         `;
         document.head.appendChild(style);
     }
@@ -226,7 +306,12 @@ class APIParticleSystem {
     createParticles() {
         const layer = this.container.querySelector('.particle-layer');
         
-        this.apiDefinitions.forEach((api, index) => {
+        // On mobile, show fewer particles for better performance
+        const particlesToCreate = this.isMobile 
+            ? this.apiDefinitions.filter((_, i) => i % 2 === 0) // Show 10 on mobile
+            : this.apiDefinitions; // Show all 20 on desktop
+        
+        particlesToCreate.forEach((api, index) => {
             const particle = document.createElement('div');
             particle.className = 'api-particle neutral';
             particle.id = `particle-${api.id}`;
@@ -234,8 +319,11 @@ class APIParticleSystem {
             particle.innerHTML = api.icon;
             particle.style.color = api.color;
             particle.style.backgroundColor = `${api.color}22`;
-            particle.style.width = '50px';
-            particle.style.height = '50px';
+            
+            // Smaller particles on mobile
+            const baseSize = this.isMobile ? 35 : 50;
+            particle.style.width = `${baseSize}px`;
+            particle.style.height = `${baseSize}px`;
             
             // Random starting position
             const startX = Math.random() * (window.innerWidth - 60);
@@ -243,14 +331,25 @@ class APIParticleSystem {
             particle.style.left = `${startX}px`;
             particle.style.top = `${startY}px`;
             
-            // Store movement data
-            particle.dataset.vx = (Math.random() - 0.5) * 2;
-            particle.dataset.vy = (Math.random() - 0.5) * 2;
-            particle.dataset.baseSpeed = 0.5 + Math.random() * 0.5;
+            // Store movement data - slower on mobile
+            const speedFactor = this.isMobile ? 0.5 : 1;
+            particle.dataset.vx = (Math.random() - 0.5) * 2 * speedFactor;
+            particle.dataset.vy = (Math.random() - 0.5) * 2 * speedFactor;
+            particle.dataset.baseSpeed = (0.5 + Math.random() * 0.5) * speedFactor;
             
-            // Event listeners
-            particle.addEventListener('mouseenter', (e) => this.showTooltip(e, api));
-            particle.addEventListener('mouseleave', () => this.hideTooltip());
+            // Event listeners - touch support for mobile
+            if (this.isMobile) {
+                particle.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    this.showTooltip(e, api);
+                }, { passive: false });
+                particle.addEventListener('touchend', () => {
+                    setTimeout(() => this.hideTooltip(), 2000); // Hide after 2s on mobile
+                });
+            } else {
+                particle.addEventListener('mouseenter', (e) => this.showTooltip(e, api));
+                particle.addEventListener('mouseleave', () => this.hideTooltip());
+            }
             particle.addEventListener('click', () => this.focusParticle(api));
             
             layer.appendChild(particle);
