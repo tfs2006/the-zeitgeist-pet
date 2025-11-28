@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Zeitgeist Pet - Data Tamagotchi</title>
+    <meta name="description" content="A living digital entity fed by 20 real-time APIs. Watch it evolve based on weather, crypto, earthquakes, NASA images, and more!">
+    <meta property="og:title" content="The Zeitgeist Pet">
+    <meta property="og:description" content="A Data-Tamagotchi that lives and breathes internet chaos">
+    <meta property="og:type" content="website">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="background-container"></div>
+    <div id="shake-container" class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="title glitch" data-text="THE ZEITGEIST PET">THE ZEITGEIST PET</h1>
+            <p class="subtitle">A living digital entity fed by the internet's chaos</p>
+        </header>
+
+        <!-- Main Entity Display -->
+        <main class="entity-section">
+            <!-- Vibe Score Meter -->
+            <div class="vibe-meter">
+                <div class="vibe-label">VIBE SCORE</div>
+                <div class="vibe-bar">
+                    <div class="vibe-fill" id="vibe-fill"></div>
+                    <span class="vibe-score" id="vibe-score">--</span>
+                </div>
+                <div class="mood-text" id="mood-text">Loading...</div>
+            </div>
+
+            <!-- The Entity -->
+            <div class="entity-container">
+                <div class="entity-glow" id="entity-glow"></div>
+                <div class="entity-avatar">
+                    <img id="entity-image" src="" alt="The Zeitgeist Pet" />
+                    <div class="entity-name" id="entity-name">???</div>
+                </div>
+                <div class="spirit-pokemon" id="spirit-pokemon"></div>
+            </div>
+
+            <!-- Entity Thought Bubble -->
+            <div class="thought-bubble">
+                <div class="thought-content" id="entity-thought">
+                    "Awakening from the digital void..."
+                </div>
+            </div>
+
+            <!-- Interaction Buttons -->
+            <div class="interaction-section">
+                <button class="btn btn-comfort" id="btn-comfort">
+                    <span class="btn-icon">💚</span>
+                    <span class="btn-text">Comfort</span>
+                    <span class="btn-count" id="comfort-count">0</span>
+                </button>
+                <button class="btn btn-agitate" id="btn-agitate">
+                    <span class="btn-icon">⚡</span>
+                    <span class="btn-text">Agitate</span>
+                    <span class="btn-count" id="agitate-count">0</span>
+                </button>
+            </div>
+        </main>
+
+        <!-- Data Panels -->
+        <section class="data-panels">
+            <!-- World State Panel -->
+            <div class="panel" id="panel-world">
+                <h3 class="panel-title">🌍 World State</h3>
+                <div class="panel-content">
+                    <div class="data-row">
+                        <span class="data-label">Location:</span>
+                        <span class="data-value" id="data-city">--</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Weather:</span>
+                        <span class="data-value" id="data-weather">--</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Solar Phase:</span>
+                        <span class="data-value" id="data-solar">--</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Seismic:</span>
+                        <span class="data-value" id="data-seismic">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Crypto Panel -->
+            <div class="panel" id="panel-crypto">
+                <h3 class="panel-title">📈 Crypto Vibes</h3>
+                <div class="panel-content">
+                    <div class="data-row">
+                        <span class="data-label">BTC 24h:</span>
+                        <span class="data-value crypto-change" id="data-btc">--</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Sentiment:</span>
+                        <span class="data-value" id="data-sentiment">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cosmic Panel -->
+            <div class="panel" id="panel-cosmic">
+                <h3 class="panel-title">🌌 Cosmic Alignment</h3>
+                <div class="panel-content">
+                    <div class="nasa-image-container">
+                        <img id="nasa-image" src="" alt="NASA APOD" />
+                    </div>
+                    <div class="data-row">
+                        <span class="data-value" id="data-cosmic">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Word of Day Panel -->
+            <div class="panel" id="panel-word">
+                <h3 class="panel-title">📖 Word of the Day</h3>
+                <div class="panel-content">
+                    <div class="word-display" id="word-display">--</div>
+                    <div class="word-definition" id="word-definition">--</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Voice Section -->
+        <section class="voice-section">
+            <div class="voice-panel" id="voice-quote">
+                <h3>💭 Wisdom</h3>
+                <blockquote id="quote-text">"Loading ancient wisdom..."</blockquote>
+                <cite id="quote-author">- The Void</cite>
+            </div>
+            <div class="voice-panel" id="voice-advice">
+                <h3>🎯 Advice</h3>
+                <p id="advice-text">Processing life lessons...</p>
+            </div>
+            <div class="voice-panel" id="voice-joke">
+                <h3>😄 Joke</h3>
+                <p id="joke-text">Generating humor subroutines...</p>
+            </div>
+            <div class="voice-panel" id="voice-number">
+                <h3>🔢 Number Fact</h3>
+                <p id="number-text">Calculating numerical trivia...</p>
+            </div>
+        </section>
+
+        <!-- Recommendations -->
+        <section class="recommendations">
+            <h2 class="section-title">🎁 The Entity Recommends</h2>
+            <div class="rec-grid">
+                <div class="rec-card" id="rec-book">
+                    <div class="rec-icon">📚</div>
+                    <div class="rec-label">Read This</div>
+                    <div class="rec-title" id="rec-book-title">--</div>
+                    <div class="rec-author" id="rec-book-author">--</div>
+                </div>
+                <div class="rec-card" id="rec-drink">
+                    <div class="rec-icon">🍹</div>
+                    <div class="rec-label">Drink This</div>
+                    <div class="rec-title" id="rec-drink-title">--</div>
+                    <img id="rec-drink-image" src="" alt="" class="rec-image" />
+                </div>
+                <div class="rec-card" id="rec-past">
+                    <div class="rec-icon">⏳</div>
+                    <div class="rec-label">Past Life</div>
+                    <div class="rec-title" id="rec-past-title">10 years ago...</div>
+                    <a href="#" id="rec-past-link" target="_blank" class="rec-link">View Archive</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Actions -->
+        <footer class="footer">
+            <div class="footer-actions">
+                <button class="footer-btn" id="btn-brain-scan">
+                    🧠 Brain Scan
+                </button>
+                <button class="footer-btn" id="btn-mood-card">
+                    📸 Mood Card
+                </button>
+                <a href="graveyard.html" class="footer-btn">
+                    ⚰️ Graveyard
+                </a>
+                <button class="footer-btn" id="btn-qr">
+                    📱 QR Code
+                </button>
+            </div>
+            <div class="update-timer">
+                Next evolution in: <span id="countdown">--:--</span>
+            </div>
+            <div class="credits">
+                Fed by 20 APIs • Built with chaos • <a href="https://github.com/tfs2006/the-zeitgeist-pet" target="_blank">Open Source</a>
+            </div>
+            <div class="branding">
+                Vibe Coded by <a href="https://davidjwoodbury.com" target="_blank">David J Woodbury</a>
+            </div>
+            <div class="copyright">
+                © <span id="current-year"></span> The Zeitgeist Pet. All rights reserved.
+            </div>
+        </footer>
+        <script>document.getElementById('current-year').textContent = new Date().getFullYear();</script>
+
+        <!-- Brain Scan Modal -->
+        <div class="modal" id="modal-brain-scan">
+            <div class="modal-content">
+                <span class="modal-close" id="close-brain-scan">&times;</span>
+                <h2>🧠 Brain Scan - Raw Neural Data</h2>
+                <pre id="brain-scan-data">Loading neural pathways...</pre>
+            </div>
+        </div>
+
+        <!-- Mood Card Modal -->
+        <div class="modal" id="modal-mood-card">
+            <div class="modal-content mood-card-modal">
+                <span class="modal-close" id="close-mood-card">&times;</span>
+                <div class="mood-card" id="mood-card">
+                    <div class="mood-card-header">
+                        <span class="mood-card-date" id="card-date">--</span>
+                        <span class="mood-card-emoji" id="card-emoji">--</span>
+                    </div>
+                    <div class="mood-card-score" id="card-score">--</div>
+                    <div class="mood-card-mood" id="card-mood">--</div>
+                    <div class="mood-card-thought" id="card-thought">--</div>
+                    <div class="mood-card-footer">zeitgeist.pet</div>
+                </div>
+                <button class="btn btn-share" id="btn-share">📤 Share</button>
+            </div>
+        </div>
+
+        <!-- QR Modal -->
+        <div class="modal" id="modal-qr">
+            <div class="modal-content">
+                <span class="modal-close" id="close-qr">&times;</span>
+                <h2>📱 Take Me With You</h2>
+                <img id="qr-code" src="" alt="QR Code" class="qr-image" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Particle System Container -->
+    <div id="particle-container"></div>
+
+    <!-- Scripts - Order matters! -->
+    <script src="chaosEngine.js"></script>
+    <script src="entityState.js"></script>
+    <script src="pollinations.js"></script>
+    <script src="particles.js"></script>
+    <script src="prophecy.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
